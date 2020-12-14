@@ -80,7 +80,7 @@ Elasticsearch를 구성하는 하나의 단위 프로세스를 의미합니다.
 
 ### Restful
 - 데이터 CURD 작업은 HTTP Restful API를 통해 수행한다.
-![restful](./img/restful.png)
+![restful](./img/restful.PNG)
 
 ### 역색인(inverted index) -> ElasticSearch가 빠른 이유
 index와 inverted index의 차이
