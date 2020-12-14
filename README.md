@@ -61,7 +61,10 @@ Elasticsearch를 구성하는 하나의 단위 프로세스를 의미합니다.
 
 -> 샤딩과 파티셔닝 차이
 - 샤딩 : 여러시스템에 나누어 저장
-- 파티셔닝 : 한 시스템에서 여러 테이블로 저장
+- 파티셔닝 : 한 시스템에서 여러 테이블로 저장   
+
+Shard와 Replica 개념 참고1 : https://jiseok-woo.tistory.com/8   
+Shard와 Replica 개념 참고2 : http://guruble.com/elasticsearch-2-shard-replica/   
 
 복제   
 - 장애가 발생할 경우 고가용성을 제공합니다. 그렇기 때문에 복제본 샤드는 복사된 원본/기본 샤드와 동일한 노드에 할당되지 않습니다.   
