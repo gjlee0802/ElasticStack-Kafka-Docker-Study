@@ -69,6 +69,10 @@ Elasticsearch를 구성하는 하나의 단위 프로세스를 의미합니다.
 - 기본적으로 각 인덱스는 4개의 기본 샤드와 1개의 복제본이 할당됩니다.   
 - 또 다른 형태의 shard라고 할 수 있습니다. 노드를 손실했을 경우 데이터의 신뢰성을 위해 샤드들을 복제하는 것이죠. 따라서 replica는 서로 다른 노드에 존재할 것을 권장합니다.   
 
+->Replica가 필요한 이유 2가지   
+- 1. ‘검색성능(search performance)‘   
+- 2. ‘장애복구(fail-over)‘    
+
 ![ElasticsearchArch](./img/ElasticSearchArch.png)
 
 ### 4) 문서( Document )
@@ -86,6 +90,7 @@ RDB의 row, 레코드와 비슷.
 
 ### 고가용성
 - Replica를 통해 데이터의 안정성을 보장
+![Replica](./img/replica.PNG)
 
 ### Schema Free
 - Json 문서를 통해 데이터 검색을 수행하므로 스키마 개념이 없음
