@@ -32,6 +32,7 @@ Elastic Search에 저장된 정보들을 검색 및 분석하고 시각화하는
 ![RDBMS_Elastic](./img/RDBMS대응.jpg)
 ![RDBMS_Elastic_](./img/RDBMS대응_.png)
 
+
 ## Elasticsearch 용어 정리
 ### 1) 클러스터( cluseter )
 클러스터란 Elasticsearch에서 가장 큰 시스템 단위를 의미하며, 최소 하나 이상의 노드로 이루어진 노드들의 집합입니다.
@@ -62,6 +63,36 @@ Elasticsearch를 구성하는 하나의 단위 프로세스를 의미합니다.
 - 장애가 발생할 경우 고가용성을 제공합니다. 그렇기 때문에 복제본 샤드는 복사된 원본/기본 샤드와 동일한 노드에 할당되지 않습니다.
 - 모든 복제본에서 검색을 병렬로 실행할 수 있기 때문에 검색 볼륨/처리량을 수평 확장 할 수 있습니다.
 - 기본적으로 각 인덱스는 4개의 기본 샤드와 1개의 복제본이 할당됩니다.
-또 다른 형태의 shard라고 할 수 있습니다.
-노드를 손실했을 경우 데이터의 신뢰성을 위해 샤드들을 복제하는 것이죠.
-따라서 replica는 서로 다른 노드에 존재할 것을 권장합니다.
+- 또 다른 형태의 shard라고 할 수 있습니다. 노드를 손실했을 경우 데이터의 신뢰성을 위해 샤드들을 복제하는 것이죠. 따라서 replica는 서로 다른 노드에 존재할 것을 권장합니다.
+
+![ElasticsearchArch](./img/ElasticSearchArch.png)
+
+
+## Elasticsearch 특징
+### Scale out
+- 샤드를 통해 규모가 수평적으로 늘어날 수 있음
+
+### 고가용성
+- Replica를 통해 데이터의 안정성을 보장
+
+### Schema Free
+- Json 문서를 통해 데이터 검색을 수행하므로 스키마 개념이 없음
+
+### Restful
+- 데이터 CURD 작업은 HTTP Restful API를 통해 수행한다.
+![restful](./img/restful.png)
+
+### 역색인(inverted index) -> ElasticSearch가 빠른 이유
+index와 inverted index의 차이
+쉽게 말해서 책에서 맨 앞에 볼 수 있는 목차가 index이고,
+책 맨 뒤에 키워드마다 찾아볼 수 있도록 찾아보기가 inverted index입니다.
+
+Elasticsearch는 텍스트를 파싱해서 검색어 사전을 만든 다음에 inverted index 방식으로 텍스트를 저장합니다.
+"Lorem Ipsum is simply dummy text of the printing and typesetting industry"
+예를 들어, 이 문장을 모두 파싱해서 각 단어들( Lorem, Ipsum, is, simply .... )을 저장하고,
+대문자는 소문자 처리하고, 유사어도 체크하고... 등의 작업을 통해 텍스트를 저장합니다.
+
+출처 : 
+https://victorydntmd.tistory.com/308
+https://iassad.tistory.com/7
+https://heowc.tistory.com/49
