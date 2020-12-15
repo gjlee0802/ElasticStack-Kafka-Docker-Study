@@ -5,7 +5,7 @@
 ### Elasticsearch (데이터베이스)
 Logstash로부터 받은 데이터를 검색 및 집계를 하여 필요한 관심 있는 정보를 획득.   
 Lucene 검색엔진 기반의 데이터베이스로 고성능의 검색 기능, 대규모 분산 시스템 기능 등을 제공한다.   
-표준 RESTful API와 JSON을 이용해 데이터를 처리합니다.  
+표준 **RESTful API와 JSON을 이용**해 데이터를 처리합니다.  
 
 ### Logstash (Input > filter > output 의 pipeline 구조로 수집하고 필터링하여 전달)
 다양한 소스( DB, csv파일 등 )의 로그 또는 트랜잭션 데이터를 수집, 집계, 파싱하여 Elasticsearch로 전달   
@@ -102,6 +102,10 @@ RDB의 row, 레코드와 비슷.
 - 데이터 CURD 작업은 HTTP Restful API를 통해 수행한다.
 ![restful](./img/restful.PNG)
 
+### 멀티테넌시 (multitenancy)   
+데이터들은 인덱스(Index) 라는 논리적인 집합 단위로 구성되며 서로 다른 저장소에 분산되어 저장됩니다.   
+서로 다른 인덱스들을 별도의 커넥션 없이 하나의 질의로 묶어서 검색하고, 검색 결과들을 하나의 출력으로 도출할 수 특징.   
+
 ### 역색인(inverted index) -> ElasticSearch가 빠른 이유
    
 **RDB의 경우**   
@@ -116,16 +120,23 @@ Elasticsearch에서는 추출된 각 키워드를 텀(term) 이라고 부릅니�
 이렇게 역 인덱스가 있으면 fox를 포함하고 있는 도큐먼트들의 id를 바로 얻어올 수 있습니다.   
 
 ### 텍스트 분석(Text Analysis) 
-Elasticsearch의 애널라이저는 0~3개의 캐릭터 필터(Character Filter)와 1개의 토크나이저(Tokenizer), 그리고 0~n개의 토큰 필터(Token Filter)로 이루어집니다.
+Elasticsearch의 애널라이저는 0-3개의 캐릭터 필터(Character Filter)와 1개의 토크나이저(Tokenizer), 그리고 0-n개의 토큰 필터(Token Filter)로 이루어집니다.
 ![Analyzer](./img/text_analyzer.png)   
-**캐릭터 필터: **전체 문장에서 특정 문자를 대치하거나 제거하는데 이 과정을 담당하는 기능.
-**토크나이저: **문장에 속한 단어들을 텀 단위로 하나씩 분리 해 내는 처리 과정을 거치는데 이 과정을 담당하는 기능.(반드시 1개만 적용이 가능합니다.)
+**캐릭터 필터: **전체 문장에서 특정 문자를 대치하거나 제거하는데 이 과정을 담당하는 기능.   
+**토크나이저: **문장에 속한 단어들을 텀 단위로 하나씩 분리 해 내는 처리 과정을 거치는데 이 과정을 담당하는 기능.(반드시 1개만 적용이 가능합니다.)   
+**lowercase 토큰필터:  **대문자를 모두 소문자로 바꿔줍니다.   
+**stop 토큰필터: **불용어(stopword, 검색어로서의 가치가 없는 단어)를 제거.   
+**snowball 토큰필터: **형태소 분석 과정을 거쳐서 문법상 변형된 단어를 일반적으로 검색에 쓰이는 기본 형태로 변환.(jumps와 jumping은 모두 jump로 변경)   
+
+
+
 
 출처 :    
 https://victorydntmd.tistory.com/308    
 https://iassad.tistory.com/7   
 https://heowc.tistory.com/49   
 https://esbook.kimjmin.net/06-text-analysis/6.1-indexing-data
+### 
 
 # ElasticStackStudy2
 
@@ -164,7 +175,7 @@ https://esbook.kimjmin.net/06-text-analysis/6.1-indexing-data
   - $ bin/elasticsearch -E cluster.name=my-cluster -E node.name="node-1"   
  
 ## 클러스터 구성
-Elasticsearch의 노드들은 클라이언트와의 통신을 위한 http 포트(9200~9299), 노드 간의 데이터 교환을 위한 tcp 포트 (9300~9399) 총 2개의 네트워크 통신을 열어두고 있습니다.   
+Elasticsearch의 노드들은 클라이언트와의 통신을 위한 http 포트(9200-9299), 노드 간의 데이터 교환을 위한 tcp 포트 (9300-9399) 총 2개의 네트워크 통신을 열어두고 있습니다.   
 일반적으로 1개의 물리 서버마다 하나의 노드를 실행하는 것을 권장하고 있습니다.   
 ### 여러 서버에 하나의 클러스터로 실행   
 - 3개의 다른 물리 서버에서 각각 1개 씩의 노드를 실행하면   
