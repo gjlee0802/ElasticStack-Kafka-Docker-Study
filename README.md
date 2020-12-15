@@ -103,19 +103,23 @@ RDB의 row, 레코드와 비슷.
 ![restful](./img/restful.PNG)
 
 ### 역색인(inverted index) -> ElasticSearch가 빠른 이유
-index와 inverted index의 차이:   
-쉽게 말해서 책에서 맨 앞에 볼 수 있는 목차가 index이고,   
-책 맨 뒤에 키워드마다 찾아볼 수 있도록 찾아보기가 inverted index입니다.   
+   
+**RDB의 경우**   
+![RDBsearch](./img/RDB_likesearch.png)
+like 검색: 
+fox가 포함된 행들을 가져온다고 하면 다음과 같이 Text 열을 한 줄씩 찾아 내려가면서 fox가 있으면 가져오고 없으면 넘어가는 식으로 데이터를 가져옵니다   
 
-Elasticsearch는 텍스트를 파싱해서 검색어 사전을 만든 다음에 inverted index 방식으로 텍스트를 저장합니다.   
-"Lorem Ipsum is simply dummy text of the printing and typesetting industry"   
-예를 들어, 이 문장을 모두 파싱해서 각 단어들( Lorem, Ipsum, is, simply .... )을 저장하고,   
-대문자는 소문자 처리하고, 유사어도 체크하고... 등의 작업을 통해 텍스트를 저장합니다.   
+![inverted_index](./img/inverted_index.png)
+Inverted Index: 
+책의 맨 뒤에 있는 주요 키워드에 대한 내용이 몇 페이지에 있는지 볼 수 있는 찾아보기 페이지에 비유할 수 있습니다.   
+Elasticsearch에서는 추출된 각 키워드를 텀(term) 이라고 부릅니다.    
+이렇게 역 인덱스가 있으면 fox를 포함하고 있는 도큐먼트들의 id를 바로 얻어올 수 있습니다.   
 
 출처 :    
 https://victorydntmd.tistory.com/308    
 https://iassad.tistory.com/7   
 https://heowc.tistory.com/49   
+https://esbook.kimjmin.net/06-text-analysis/6.1-indexing-data
 
 # ElasticStackStudy1
 
@@ -202,7 +206,7 @@ __(elasticsearch.yml)__
 __(elasticsearch.yml)__
 - 마스터 후보 노드들은 node.data: false 로 설정하여 마스터 노드 역할만 하고 데이터는 저장하지 않도록 할 수 있습니다.
 
-### Split Brain
+### Split Brain 문제
 마스터 후보 노드들은 3개 이상의 **홀수 개**를 놓는 것을 권장하고 있습니다. 만약에 마스터 후보 노드를 2개 혹은 짝수로 운영하는 경우 네트워크 유실로 인해 다음과 같은 상황을 겪을 수 있습니다.
 ![splitbrain](./img/splitbrain.png)   
 **Split Brain이란**   
