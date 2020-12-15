@@ -108,12 +108,18 @@ RDB의 row, 레코드와 비슷.
 ![RDBsearch](./img/RDB_likesearch.png)
 like 검색: 
 fox가 포함된 행들을 가져온다고 하면 다음과 같이 Text 열을 한 줄씩 찾아 내려가면서 fox가 있으면 가져오고 없으면 넘어가는 식으로 데이터를 가져옵니다   
-
-![inverted_index](./img/inverted_index.png)
+**ElasticSearch의 경우**   
+![inverted_index](./img/inverted_index.png)   
 Inverted Index: 
 책의 맨 뒤에 있는 주요 키워드에 대한 내용이 몇 페이지에 있는지 볼 수 있는 찾아보기 페이지에 비유할 수 있습니다.   
 Elasticsearch에서는 추출된 각 키워드를 텀(term) 이라고 부릅니다.    
 이렇게 역 인덱스가 있으면 fox를 포함하고 있는 도큐먼트들의 id를 바로 얻어올 수 있습니다.   
+
+### 텍스트 분석(Text Analysis) 
+Elasticsearch의 애널라이저는 0~3개의 캐릭터 필터(Character Filter)와 1개의 토크나이저(Tokenizer), 그리고 0~n개의 토큰 필터(Token Filter)로 이루어집니다.
+![Analyzer](./img/text_analyzer.png)   
+**캐릭터 필터: **전체 문장에서 특정 문자를 대치하거나 제거하는데 이 과정을 담당하는 기능.
+**토크나이저: **문장에 속한 단어들을 텀 단위로 하나씩 분리 해 내는 처리 과정을 거치는데 이 과정을 담당하는 기능.(반드시 1개만 적용이 가능합니다.)
 
 출처 :    
 https://victorydntmd.tistory.com/308    
@@ -121,7 +127,7 @@ https://iassad.tistory.com/7
 https://heowc.tistory.com/49   
 https://esbook.kimjmin.net/06-text-analysis/6.1-indexing-data
 
-# ElasticStackStudy1
+# ElasticStackStudy2
 
 ## ElasticSearch Data 색인
 - [동사] 색인 (indexing) : 데이터가 검색될 수 있는 구조로 변경하기 위해 원본 문서를 검색어 토큰들으로 변환하여 저장하는 일련의 과정입니다.   
@@ -160,12 +166,12 @@ https://esbook.kimjmin.net/06-text-analysis/6.1-indexing-data
 ## 클러스터 구성
 Elasticsearch의 노드들은 클라이언트와의 통신을 위한 http 포트(9200~9299), 노드 간의 데이터 교환을 위한 tcp 포트 (9300~9399) 총 2개의 네트워크 통신을 열어두고 있습니다.   
 일반적으로 1개의 물리 서버마다 하나의 노드를 실행하는 것을 권장하고 있습니다.   
-### 여러 서버에 하나의 클러스터로 실행  
+### 여러 서버에 하나의 클러스터로 실행   
 - 3개의 다른 물리 서버에서 각각 1개 씩의 노드를 실행하면   
 ![cluster_1](./img/cluster_1.png)   
 - 서버1 에서 두개의 노드를 실행하고, 또 다른 서버에서 한개의 노드를 실행   
 ![cluster_2](./img/cluster_2.png)   
-### 하나의 서버에서 여러 클러스터 실행  
+### 하나의 서버에서 여러 클러스터 실행   
 - 하나의 물리 서버에서 서로 다른 두 개의 클러스터 실행   
 ![cluster_3](./img/cluster_3.png)   
 
