@@ -1,4 +1,4 @@
-# ElasticStackStudy
+# ElasticStackStudy1
 
 ## ELK구성요소(Elasticsearch, Logstash, Kibana)
 
@@ -51,8 +51,8 @@ Elasticsearch를 구성하는 하나의 단위 프로세스를 의미합니다.
 또한 shard와 replica는 Elasticsearch에만 존재하는 개념이 아니라, 분산 데이터베이스 시스템에도 존재하는 개념입니다.   
 
 인덱스   
+- 색인 과정을 거친 결과물, 또는 색인된 데이터가 저장되는 저장소입니다.
 - 다소 유사한 특성을 갖는 문서들의 집합입니다.   
-- 단일 클러스터에서 원하는만큼의 인덱스를 정의 할 수 있습니다.   
 
 샤드   
 - Index는 잠재적으로 단일 노드의 하드웨어 제한을 초과 할 수 있는 많은 양의 데이터를 저장 할 수 있습니다. 하지만 단일 노드의 디스크가 맞지 않거나 단일 노드의 검색 요청만 처리하기에는 너무 느릴 수 있기 때문에 shards를 이용하여 Index를 여러 조각으로 나눌 수 있습니다.   
@@ -116,3 +116,103 @@ Elasticsearch는 텍스트를 파싱해서 검색어 사전을 만든 다음에 
 https://victorydntmd.tistory.com/308    
 https://iassad.tistory.com/7   
 https://heowc.tistory.com/49   
+
+# ElasticStackStudy1
+
+## ElasticSearch Data 색인
+- [동사] 색인 (indexing) : 데이터가 검색될 수 있는 구조로 변경하기 위해 원본 문서를 검색어 토큰들으로 변환하여 저장하는 일련의 과정입니다.   
+- [명사] 인덱스 (index, indices) : 색인 과정을 거친 결과물, 또는 색인된 데이터가 저장되는 저장소입니다. 또한 Elasticsearch에서 도큐먼트들의 논리적인 집합을 표현하는 단위이기도 합니다.   
+- 검색 (search) : 인덱스에 들어있는 검색어 토큰들을 포함하고 있는 문서를 찾아가는 과정입니다.   
+- 질의 (query) : 사용자가 원하는 문서를 찾거나 집계 결과를 출력하기 위해 검색 시 입력하는 검색어 또는 검색 조건입니다.    
+![Indexing](./img/indexing.png)   
+
+## ElasticSearch 실행 옵션   
+- -d : Elasticsearch를 백그라운 데몬으로 실행합니다.   
+- -p <파일명> : Elasticsearch 프로세스 ID를 지정한 파일에 저장합니다. 실행이 종료되면 저장된 파일은 자동으로 삭제됩니다.   
+
+## ElasticSearch 실행 환경 설정방법 2가지   
+- 홈 디렉토리의 config 경로 아래 있는 파일들을 변경   
+  - jvm.options - Java 힙메모리 및 환경변수 (Elasticsearch는 Java의 가상머신 위에서 실행이 되는데 7.0 기준으로 1gb의 힙메모리가 기본으로 설정되어 있습니다.)   
+  - elasticsearch.yml - Elasticsearch 옵션 (elasticsearch 실행 환경에 대한 실제 설정들은 대부분 elasticsearch.yml 파일에서 설정)   
+  - log4j2.properties - 로그 관련 옵션   
+- 시작 명령으로 설정하는 방법   
+  - Elasticsearch 를 처음 실행할 때 -E 커맨드 라인 명령을 통해서도 가능합니다.   
+  ### elasticsearch.yml 설정
+  - cluster.name: "<클러스터명>"   
+  - node.name: "<노드명>"   
+  - node.attr.<key>: "<value>"   
+  - path.data: [ "<경로>" ]   
+  - path.logs: "<경로>"   
+  - bootstrap.memory_lock: true   
+  - network.host: <ip 주소>   
+  - http.port: <포트 번호>   
+  - transport.port: <포트 번호>   
+  - discovery.seed_hosts: [ "<호스트-1>", "<호스트-2>", ... ]   
+  - cluster.initial_master_nodes: [ "<노드-1>", "<노드-2>" ]   
+  ### 시작 명령으로 설정   
+    클러스터명은 my-cluster 노드명은 node-1로 노드를 실행하기 위해서는 다음과 같이 실행.   
+  - $ bin/elasticsearch -E cluster.name=my-cluster -E node.name="node-1"   
+ 
+## 클러스터 구성
+Elasticsearch의 노드들은 클라이언트와의 통신을 위한 http 포트(9200~9299), 노드 간의 데이터 교환을 위한 tcp 포트 (9300~9399) 총 2개의 네트워크 통신을 열어두고 있습니다.   
+일반적으로 1개의 물리 서버마다 하나의 노드를 실행하는 것을 권장하고 있습니다.   
+### 여러 서버에 하나의 클러스터로 실행  
+- 3개의 다른 물리 서버에서 각각 1개 씩의 노드를 실행하면   
+![cluster_1](./img/cluster_1.png)   
+- 서버1 에서 두개의 노드를 실행하고, 또 다른 서버에서 한개의 노드를 실행   
+![cluster_2](./img/cluster_2.png)   
+### 하나의 서버에서 여러 클러스터 실행  
+- 하나의 물리 서버에서 서로 다른 두 개의 클러스터 실행   
+![cluster_3](./img/cluster_3.png)   
+
+출처: https://esbook.kimjmin.net/03-cluster/3.1-cluster-settings   
+
+### 디스커버리 (Discovery)
+노드가 처음 실행 될 때 같은 서버, 또는 discovery.seed_hosts: [ ] 에 설정된 네트워크 상의 다른 노드들을 찾아 하나의 클러스터로 바인딩 하는 과정   
+ 순서   
+ 1. discovery.seed_hosts 설정에 있는 주소 순서대로 노드가 있는지 여부를 확인   
+  - 노드가 존재하는 경우 > cluster.name 확인   
+     - 일치하는 경우 > 같은 클러스터로 바인딩 > 종료   
+     - 일치하지 않는 경우 > 1로 돌아가서 다음 주소 확인 반복   
+  - 노드가 존재하지 않는 경우 > 1로 돌아가서 다음 주소 확인 반복   
+ 2. 주소가 끝날 때 까지 노드를 찾지 못한 경우   
+  - 스스로 새로운 클러스터 시작   
+![discovery](./img/discovery.png)
+
+## 인덱스와 샤드 - Index & Shards
+- 인덱스는 기본적으로 샤드(shard)라는 단위로 분리되고 각 노드에 분산되어 저장이 됩니다.
+- 같은 샤드와 복제본은 동일한 데이터를 담고 있으며 반드시 서로 다른 노드에 저장이 됩니다.
+- 샤드의 개수는 인덱스를 처음 생성할 때 지정할 수 있습니다. 
+- 프라이머리 샤드 수는 인덱스를 처음 생성할 때 지정하며, 인덱스를 재색인 하지 않는 이상 바꿀 수 없습니다. 
+- 복제본의 개수는 나중에 변경이 가능합니다.
+
+## 마스터 노드와 데이터 노드 - Master & Data
+### 마스터 노드 (Master Node)
+하나의 노드는 인덱스의 메타 데이터, 샤드의 위치와 같은 클러스터 상태(Cluster Status) 정보를 관리하는 마스터 노드의 역할을 수행합니다.   
+클러스터마다 반드시 하나의 마스터 노드가 존재합니다.   
+
+__(elasticsearch.yml)__
+- 디폴트 설정은 node.master: true로 되어 있습니다. ( 모든 노드가 마스터 노드로 선출될 수 있는 마스터 후보 노드 )
+- 클러스터가 커져서 노드와 샤드들의 개수가 많아지게 되면 모든 노드들이 마스터 노드의 정보를 계속 공유하는 것은 부담이 될 수 있습니다. 
+      마스터 노드로 사용하지 않는 노드들은 설정값을 node.master: false 로 하여 마스터 노드의 역할을 하지 않도록 합니다.
+
+### 데이터 노드 (Data Node)
+실제로 색인된 데이터를 저장하고 있는 노드입니다.  
+
+__(elasticsearch.yml)__
+- 마스터 후보 노드들은 node.data: false 로 설정하여 마스터 노드 역할만 하고 데이터는 저장하지 않도록 할 수 있습니다.
+
+### Split Brain
+마스터 후보 노드들은 3개 이상의 **홀수 개**를 놓는 것을 권장하고 있습니다. 만약에 마스터 후보 노드를 2개 혹은 짝수로 운영하는 경우 네트워크 유실로 인해 다음과 같은 상황을 겪을 수 있습니다.
+![splitbrain](./img/splitbrain.png)   
+**Split Brain이란**   
+네트워크 단절로 마스터 후보 노드가 분리되면 각자가 서로 다른 클러스터로 구성되어 동작하다가   
+네트워크가 복구 되고 하나의 클러스터로 다시 합쳐졌을 때 데이터 정합성에 문제가 생기고 데이터 무결성 손실되는 현상.   
+   
+**Split Brain 문제를 피하기**   
+마스터 후보 노드 개수는 항상 홀수로 하고 가동을 위한 최소 마스터 후보 노드 설정은 (전체 마스터 후보 노드)/2+1 로 설정   
+   
+__(elasticsearch.yml)__   
+7.0버전부터는 node.master: true 인 노드가 추가되면 클러스터가 스스로 minimum_master_nodes 노드 값을 변경하도록 되었습니다.   
+사용자는 최초 마스터 후보로 선출할 cluster.initial_master_nodes: [ ] 값만 설정하면 됩니다.   
+
