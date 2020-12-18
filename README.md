@@ -259,23 +259,31 @@ RESTFul API : 항상 단일 URL로 접근을 하고 PUT, GET, DELETE 같은 http
 http://<호스트>:<포트>/<인덱스>/_doc/<도큐먼트 id>   
 ## CRUD API
 - PUT **(Update)**
+~~~
 PUT my_index/_doc/1   
 {   
   "name":"GyeongJoo Lee",   
   "message":"안녕하세요 Elasticsearch"   
-}   
+}  
+~~~
 - GET **(Read)**
+~~~
 GET my_index/_doc/1   
+~~~
 - DELETE **(Delete)**
+~~~
 DELETE my_index/_doc/1   
+~~~
 - POST **(Create)**
 POST 메서드는 PUT 메서드와 유사하게 데이터 입력에 사용이 가능합니다.   
 도큐먼트를 입력할 때 POST 메서드로 <인덱스>/_doc 까지만 입력하게 되면 자동으로 임의의 도큐먼트id 가 생성됩니다. 도큐먼트id의 자동 생성은 PUT 메서드로는 동작하지 않습니다.   
+~~~
 POST my_index/_doc   
 {   
   "name":"GyeongJoo Lee",   
   "message":"안녕하세요 Elasticsearch"   
-}   
+}  
+~~~
 
 ## 벌크 API
 - 여러 명령을 배치로 수행하기 위해서 _bulk API의 사용이 가능합니다.   
@@ -283,8 +291,9 @@ _bulk API로 index, create, update, delete의 동작이 가능하며 delete를 �
 - 벌크 동작은 따로따로 수행하는 것 보다 속도가 훨씬 빠릅니다. 특히 대량의 데이터를 입력 할 때는 반드시 _bulk API를 사용해야 불필요한 오버헤드가 없습니다.   
 
 다음 명령으로 __bulk.json__ 파일에 있는 내용들을 _bulk 명령으로 실행 가능합니다. 파일 이름 앞에는 @문자를 입력합니다.   
+~~~
 $ curl -XPOST "http://localhost:9200/_bulk" -H 'Content-Type: application/json' --data-binary @bulk.json
-
+~~~
 ## 검색 API
 Elasticsearch의 진가는 쿼리를 통한 검색 기능에 있습니다.   
 검색은 인덱스 단위로 이루어집니다.   
@@ -292,12 +301,17 @@ Elasticsearch의 진가는 쿼리를 통한 검색 기능에 있습니다.
 ### URI 검색
 GET <인덱스명>/_search 형식으로 사용하며 쿼리를 입력하지 않으면 전체 도큐먼트를 찾는 match_all 검색을 합니다.   
 - URI 검색으로 검색어 "value" 검색   
+~~~
 GET test/_search?q=value   
+~~~
 - URI 검색으로 검색어 "value AND three" 검색 (AND, OR, NOT)   
+~~~
 GET test/_search?q=value AND three   
+~~~
 - URI 검색으로 "field" 필드에서 검색어 "value" 검색 (검색어 value 을 field 필드에서 찾고 싶으면)   
+~~~
 GET test/_search?q=field:value   
-
+~~~
 ### 데이터 본문 (Data Body) 검색
 데이터 본문(data body) 검색은 검색 쿼리를 데이터 본문으로 입력하는 방식입니다.   
 Elasticsearch의 QueryDSL을 사용하며 쿼리 또한 Json 형식으로 되어 있습니다.   
@@ -307,6 +321,7 @@ Elasticsearch의 QueryDSL을 사용하며 쿼리 또한 Json 형식으로 되어
 그 다음 레벨에서 쿼리의 종류를 지정하는데 위에서는 match 쿼리를 지정했습니다. 
 그 다음은 사용할 쿼리 별로 문법이 상이할 수 있는데 match 쿼리는 <필드명>:<검색어> 방식으로 입력합니다.
 데이터 본문 검색으로 "field" 필드에서 검색어 "value" 검색
+~~~
 GET test/_search   
 {   
   "query": {   
@@ -315,6 +330,7 @@ GET test/_search
     }   
   }   
 }   
+~~~
 **멀티테넌시 (Multitenancy)**
 여러 개의 인덱스를 한꺼번에 묶어서 검색할 수 있는 멀티테넌시를 지원합니다.   
 - 쉼표로 나열해서 여러 인덱스 검색   
