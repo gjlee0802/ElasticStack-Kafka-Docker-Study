@@ -252,3 +252,45 @@ Elasticsearch에서는 샤드당 단일 쓰레드가 각 쿼리를 실행합니�
 샤드의 수가 너무 적으면 단일 쿼리의 응답 속도는 느려질 수 있으나 대량의 쿼리가 진입될 경우 고른 성능을 보여줄 수 있고, 샤드의 수가 너무 많으면 단일 쿼리의 응답 속도는 빠를 수 있으나 대량의 쿼리가 인입될 경우 쿼리 별 성능 차이가 심해질 수 있습니다.   
 출처: https://www.elastic.co/kr/blog/how-many-shards-should-i-have-in-my-elasticsearch-cluster   
       https://brunch.co.kr/@alden/39
+      
+      
+# ElasticStackStudy3
+RESTFul API : 항상 단일 URL로 접근을 하고 PUT, GET, DELETE 같은 http 메서드로 데이터를 처리합니다
+http://<호스트>:<포트>/<인덱스>/_doc/<도큐먼트 id> 
+## CRUD API
+- PUT **(Update)**
+PUT my_index/_doc/1   
+{   
+  "name":"GyeongJoo Lee",   
+  "message":"안녕하세요 Elasticsearch"   
+}   
+- GET **(Read)**
+GET my_index/_doc/1   
+- DELETE **(Delete)**
+DELETE my_index/_doc/1   
+- POST **(Create)**
+POST 메서드는 PUT 메서드와 유사하게 데이터 입력에 사용이 가능합니다.   
+도큐먼트를 입력할 때 POST 메서드로 <인덱스>/_doc 까지만 입력하게 되면 자동으로 임의의 도큐먼트id 가 생성됩니다. 도큐먼트id의 자동 생성은 PUT 메서드로는 동작하지 않습니다.   
+POST my_index/_doc
+{
+  "name":"GyeongJoo Lee",
+  "message":"안녕하세요 Elasticsearch"
+}
+
+## 벌크 API
+- 여러 명령을 배치로 수행하기 위해서 _bulk API의 사용이 가능합니다. _bulk API로 index, create, update, delete의 동작이 가능하며 delete를 제외하고는 명령문과 데이터문을 한 줄씩 순서대로 입해야 합니다.
+- 벌크 동작은 따로따로 수행하는 것 보다 속도가 훨씬 빠릅니다. 특히 대량의 데이터를 입력 할 때는 반드시 _bulk API를 사용해야 불필요한 오버헤드가 없습니다.
+
+다음 명령으로 __bulk.json__ 파일에 있는 내용들을 _bulk 명령으로 실행 가능합니다. 파일 이름 앞에는 @문자를 입력합니다.   
+$ curl -XPOST "http://localhost:9200/_bulk" -H 'Content-Type: application/json' --data-binary @bulk.json
+
+## 검색 API
+Elasticsearch의 진가는 쿼리를 통한 검색 기능에 있습니다.   
+검색은 인덱스 단위로 이루어집니다.   
+GET <인덱스명>/_search 형식으로 사용하며 쿼리를 입력하지 않으면 전체 도큐먼트를 찾는 match_all 검색을 합니다.   
+- URI 검색으로 검색어 "value" 검색
+GET test/_search?q=value
+- URI 검색으로 검색어 "value AND three" 검색 (AND, OR, NOT)
+GET test/_search?q=value AND three
+- URI 검색으로 "field" 필드에서 검색어 "value" 검색 (검색어 value 을 field 필드에서 찾고 싶으면)
+GET test/_search?q=field:value
