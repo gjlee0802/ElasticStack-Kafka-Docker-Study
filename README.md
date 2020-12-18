@@ -490,4 +490,59 @@ filter는 검색에 조건은 추가하지만 스코어에는 영향을 주지 �
  스코어를 계산하지 않기 때문에 keyword 값을 검색 할 때는 filter 구문 안에 넣도록 합니다.   
     
  ## 범위 쿼리 (Range Query)
- 
+ 숫자, 날짜 형식은 range 쿼리를 이용해서 검색을 합니다.   
+ 'range : { <필드명>: { <파라메터>:<값> } }'   
+ #price 값이 700 이상 900 미만인 데이터 검색   
+ ~~~
+ GET phones/_search
+{
+  "query": {
+    "range": {
+      "price": {
+        "gte": 700,
+        "lt": 900
+      }
+    }
+  }
+}
+ ~~~
+#date 값이 2016-01-01 ~ 2018-01-01 사이의 데이터 검색    
+~~~
+GET phones/_search
+{
+  "query": {
+    "range": {
+      "date": {
+        "gt": "31/12/2015",
+        "lt": "2018",
+        "format": "dd/MM/yyyy||yyyy"
+      }
+    }
+  }
+}
+~~~
+## 데이터 색인과 텍스트 분석
+### _analyze API   
+분석된 문장을 _analyze API를 이용해서 확인할 수 있습니다.   
+토크나이저는 tokenizer, 토큰 필터는 filter 항목의 값으로 입력하면 됩니다.   
+토크나이저는 하나만 적용되기 때문에 바로 입력하고, 토큰필터는 여러개를 적용할 수 있기 때문에 [ ] 안에 배열 형식으로 입력합니다.   
+~~~
+GET _analyze
+{
+  "text": "The quick brown fox jumps over the lazy dog",
+  "tokenizer": "whitespace",
+  "filter": [
+    "lowercase",
+    "stop",
+    "snowball"
+  ]
+}
+~~~
+
+- 여러 토큰 필터를 입력 할 때는 순서가 중요하며 **만약에 stop 토큰 필터를 lowercase 보다 먼저 놓게 되면** stop 토큰필터 처리시 **대문자로 시작하는 "The"는 불용어로 간주되지 않아 그냥 남아있게 됩니다.** 그 후에 lowercase가 적용되어 소문자 "the"가 최종 검색 텀으로 역 색인에 남아있게 됩니다.   
+
+- whitespace 토크나이저 그리고 lowercase, stop, snowball 토큰필터들을 조합한 것이 **snowball 애널라이저** 입니다.   
+snowball 애널라이저를 사용한 결과는 앞의 whitespace 토크나이저 그리고 lowercase, stop, snowball 토큰필터를 사용한 결과와 동일하게 나타납니다.   
+
+- jumps, jumping을 검색하면 실제로는 jump로 바꾸어 검색이 됩니다.
+
