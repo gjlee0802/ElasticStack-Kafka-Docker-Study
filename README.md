@@ -255,8 +255,8 @@ Elasticsearch에서는 샤드당 단일 쓰레드가 각 쿼리를 실행합니�
       
       
 # ElasticStackStudy3
-RESTFul API : 항상 단일 URL로 접근을 하고 PUT, GET, DELETE 같은 http 메서드로 데이터를 처리합니다
-http://<호스트>:<포트>/<인덱스>/_doc/<도큐먼트 id> 
+RESTFul API : 항상 단일 URL로 접근을 하고 PUT, GET, DELETE 같은 http 메서드로 데이터를 처리합니다   
+http://<호스트>:<포트>/<인덱스>/_doc/<도큐먼트 id>   
 ## CRUD API
 - PUT **(Update)**
 PUT my_index/_doc/1   
@@ -271,15 +271,16 @@ DELETE my_index/_doc/1
 - POST **(Create)**
 POST 메서드는 PUT 메서드와 유사하게 데이터 입력에 사용이 가능합니다.   
 도큐먼트를 입력할 때 POST 메서드로 <인덱스>/_doc 까지만 입력하게 되면 자동으로 임의의 도큐먼트id 가 생성됩니다. 도큐먼트id의 자동 생성은 PUT 메서드로는 동작하지 않습니다.   
-POST my_index/_doc
-{
-  "name":"GyeongJoo Lee",
-  "message":"안녕하세요 Elasticsearch"
-}
+POST my_index/_doc   
+{   
+  "name":"GyeongJoo Lee",   
+  "message":"안녕하세요 Elasticsearch"   
+}   
 
 ## 벌크 API
-- 여러 명령을 배치로 수행하기 위해서 _bulk API의 사용이 가능합니다. _bulk API로 index, create, update, delete의 동작이 가능하며 delete를 제외하고는 명령문과 데이터문을 한 줄씩 순서대로 입해야 합니다.
-- 벌크 동작은 따로따로 수행하는 것 보다 속도가 훨씬 빠릅니다. 특히 대량의 데이터를 입력 할 때는 반드시 _bulk API를 사용해야 불필요한 오버헤드가 없습니다.
+- 여러 명령을 배치로 수행하기 위해서 _bulk API의 사용이 가능합니다.   
+_bulk API로 index, create, update, delete의 동작이 가능하며 delete를 제외하고는 명령문과 데이터문을 한 줄씩 순서대로 입해야 합니다.   
+- 벌크 동작은 따로따로 수행하는 것 보다 속도가 훨씬 빠릅니다. 특히 대량의 데이터를 입력 할 때는 반드시 _bulk API를 사용해야 불필요한 오버헤드가 없습니다.   
 
 다음 명령으로 __bulk.json__ 파일에 있는 내용들을 _bulk 명령으로 실행 가능합니다. 파일 이름 앞에는 @문자를 입력합니다.   
 $ curl -XPOST "http://localhost:9200/_bulk" -H 'Content-Type: application/json' --data-binary @bulk.json
@@ -287,10 +288,150 @@ $ curl -XPOST "http://localhost:9200/_bulk" -H 'Content-Type: application/json' 
 ## 검색 API
 Elasticsearch의 진가는 쿼리를 통한 검색 기능에 있습니다.   
 검색은 인덱스 단위로 이루어집니다.   
+
+### URI 검색
 GET <인덱스명>/_search 형식으로 사용하며 쿼리를 입력하지 않으면 전체 도큐먼트를 찾는 match_all 검색을 합니다.   
-- URI 검색으로 검색어 "value" 검색
-GET test/_search?q=value
-- URI 검색으로 검색어 "value AND three" 검색 (AND, OR, NOT)
-GET test/_search?q=value AND three
-- URI 검색으로 "field" 필드에서 검색어 "value" 검색 (검색어 value 을 field 필드에서 찾고 싶으면)
-GET test/_search?q=field:value
+- URI 검색으로 검색어 "value" 검색   
+GET test/_search?q=value   
+- URI 검색으로 검색어 "value AND three" 검색 (AND, OR, NOT)   
+GET test/_search?q=value AND three   
+- URI 검색으로 "field" 필드에서 검색어 "value" 검색 (검색어 value 을 field 필드에서 찾고 싶으면)   
+GET test/_search?q=field:value   
+
+### 데이터 본문 (Data Body) 검색
+데이터 본문(data body) 검색은 검색 쿼리를 데이터 본문으로 입력하는 방식입니다.   
+Elasticsearch의 QueryDSL을 사용하며 쿼리 또한 Json 형식으로 되어 있습니다.   
+   
+**match 쿼리**
+쿼리 입력은 항상 query 지정자로 시작합니다. 
+그 다음 레벨에서 쿼리의 종류를 지정하는데 위에서는 match 쿼리를 지정했습니다. 
+그 다음은 사용할 쿼리 별로 문법이 상이할 수 있는데 match 쿼리는 <필드명>:<검색어> 방식으로 입력합니다.
+데이터 본문 검색으로 "field" 필드에서 검색어 "value" 검색
+GET test/_search   
+{   
+  "query": {   
+    "match": {   
+      "field": "value"   
+    }   
+  }   
+}   
+**멀티테넌시 (Multitenancy)**
+여러 개의 인덱스를 한꺼번에 묶어서 검색할 수 있는 멀티테넌시를 지원합니다.   
+- 쉼표로 나열해서 여러 인덱스 검색   
+~~~
+GET logs-2018-01,2018-02,2018-03/_search   
+~~~
+- 와일드카드 * 를 이용해서 여러 인덱스 검색   
+~~~
+GET logs-2018-*/_search   
+~~~
+
+## Query DSL (Domain Specific Language)   
+Elasticsearch 는 검색을 위한 쿼리 기능을 제공합니다.   
+이런 데이터 시스템에서 제공하는 쿼리 기능을 Query DSL (Domain Specific Language) 이라고 이야기 하며 Elasticsearch 의 Query DSL 은 모두 json 형식으로 입력해야 합니다.   
+
+### - match all(별다른 조건 없이 해당 인덱스의 모든 도큐먼트를 검색하는 쿼리)   
+~~~
+GET my_index/_search   
+~~~
+와 아래는 동일   
+~~~
+GET my_index/_search   
+{   
+  "query":{   
+    "match_all":{ }   
+   }   
+}   
+~~~
+
+### - match(풀 텍스트 검색에 사용되는 가장 일반적인 쿼리)   
+#match 쿼리로 message 필드에서 dog 검색
+~~~
+GET my_index/_search
+{   
+  "query": {   
+    "match": {   
+      "message": "dog"   
+    }   
+  }   
+}   
+~~~
+dog가 포함된 도큐먼트들이 검색 결과로 나타납니다.   
+#match 쿼리로 message 필드에서 quick dog 검색   
+match 검색에 여러 개의 검색어를 집어넣게 되면 디폴트로 OR 조건으로 검색이 되어 입력된 검색어 별로 하나라도 포함된 모든 문서를 모두 검색합니다.   
+~~~
+GET my_index/_search
+{
+  "query": {
+    "match": {
+      "message": "quick dog"
+    }
+  }
+}
+~~~
+quick과 dog중 어떤 단어라도 포함한 도큐먼트들이 검색됩니다.   
+
+#검색어가 여럿일 때 검색 조건을 OR 가 아닌 AND 로 바꾸려면 **operator 옵션**을 사용할 수 있습니다.   
+quick dog 를 AND 조건으로 검색하려면 다음과 같습니다.   
+~~~
+GET my_index/_search
+{
+  "query": {
+    "match": {
+      "message": {
+        "query": "quick dog",
+        "operator": "and"
+      }
+    }
+  }
+}
+~~~
+
+### - match_phrase   
+
+"quick dog" 라는 구문을 공백을 포함해 정확히 일치하는 내용을 검색하려면 match_phrase 쿼리를 사용합니다.   
+#match_phrase 쿼리로 "lazy dog" 구문 검색   
+~~~
+GET my_index/_search
+{
+  "query": {
+    "match_phrase": {
+      "message": "lazy dog"
+    }
+  }
+}
+~~~
+#**slop 이라는 옵션**을 이용하여 slop에 지정된 값 만큼 단어 사이에 다른 검색어가 끼어드는 것을 허용할 수 있습니다.   
+match_phrase 쿼리에 slop:1 로 "lazy dog" 구문 검색
+~~~
+GET my_index/_search
+{
+  "query": {
+    "match_phrase": {
+      "message": {
+        "query": "lazy dog",
+        "slop": 1
+      }
+    }
+  }
+}
+~~~
+slop의 크기를 1로 했기 때문에 lazy와dog 사이에 jumping이 있는 "Lazy jumping dog" 값도 검색이 됩니다.   
+
+### - query_string   
+URL검색에 사용하는 루씬의 검색 문법을 본문 검색에 이용하고 싶을 때 query_string 쿼리를 사용할 수 있습니다.   
+   
+#message 필드에서 lazy와 jumping을 모두 포함하거나 또는 "quick dog" 구문을 포함하는 도큐먼트를 검색하는 쿼리입니다.   
+match_phrase 처럼 구문 검색을 할 때는 검색할 구문을 쌍따옴표 \" 안에 넣습니다.   
+~~~
+GET my_index/_search
+{
+  "query": {
+    "query_string": {
+      "default_field": "message",
+      "query": "(jumping AND lazy) OR \"quick dog\""
+    }
+  }
+}
+~~~
+"Lazy jumping dog" 도큐먼트와 "quick dog" 값을 포함하는 도큐먼트 두개가 결과로 리턴된 것을 확인할 수 있습니다.   
