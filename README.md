@@ -1,6 +1,6 @@
 # ElasticStack 우분투 환경에서 설치   
 
-yoonje님의 아래 레포지토리에서 'tuto'파일을 https://github.com/gjlee0802/ElasticStackStudy/blob/main/tuto 로 대체하여 수행.
+yoonje님의 아래 레포지토리에서 'tuto'파일을 https://github.com/gjlee0802/ElasticStackStudy/blob/main/tuto 로 대체하여 수행.   
 yoonje님의 설치 튜토리얼: https://github.com/yoonje/elastic-stack-tutorial   
 
 # ElasticStackStudy1
