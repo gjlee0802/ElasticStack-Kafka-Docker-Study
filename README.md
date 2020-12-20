@@ -564,12 +564,12 @@ snowball 애널라이저를 사용한 결과는 앞의 whitespace 토크나이�
 
 
 # 키바나 실습
-## 키바나 매니지먼트 (Kibana management)
+## 키바나 매니지먼트 (Kibana management)   
 basketball 인덱스 추가   
 ~~~
 $ curl -XPUT localhost:9200/basketball   
 ~~~
-사용될 필드들의 data type을 지정해주어 시각화에 도움을 줌 (주의: ContentType 명시)   
+사용될 필드들의 data type을 지정해주어 시각화에 도움을 줌. (주의: ContentType 명시)   
 ~~~
 $ curl -XPUT 'localhost:9200/basketball/record/_mappin' -d @basketball_mapping.json -H 'ContentType:application/json'   
 ~~~
@@ -581,4 +581,17 @@ basketball index 삭제
 ~~~
 $ curl -XDELETE localhost:9200/basketball   
 ~~~
-## 키바나 디스커버 (Kibana discover)
+## 키바나 디스커버 (Kibana discover)   
+Discover 페이지: 특정 인덱스의 데이터를 확인할 수 있음.   
+   
+- Discover페이지
+![discover1](./img/discover1.png)
+   
+- 더하기 모양 버튼을 클릭하여 해당 데이터와 일치하는 것들만 시각화하도록 필터를 추가할 수 있음.
+![discover2](./img/discover2.png)   
+   
+- 상단에서 필터목록을 볼 수 있음.   
+![discover3](./img/discover3.png)   
+   
+- 토글 버튼을 눌러 특정 데이터에 대한 정보들만 확인할 수 있음.   
+![discover4](./img/discover4.png)   
