@@ -562,3 +562,23 @@ snowball 애널라이저를 사용한 결과는 앞의 whitespace 토크나이�
 
 - jumps, jumping을 검색하면 실제로는 jump로 바꾸어 검색이 됩니다.
 
+
+# 키바나 실습
+## 키바나 매니지먼트 (Kibana management)
+basketball 인덱스 추가   
+~~~
+$ curl -XPUT localhost:9200/basketball   
+~~~
+사용될 필드들의 data type을 지정해주어 시각화에 도움을 줌 (주의: ContentType 명시)   
+~~~
+$ curl -XPUT 'localhost:9200/basketball/record/_mappin' -d @basketball_mapping.json -H 'ContentType:application/json'   
+~~~
+bulk (json자료 한꺼번에 삽입)
+~~~
+$ curl -XPOST 'localhost:9200/_bulk' --data-binary @bulk_basketball.json   
+~~~
+basketball index 삭제   
+~~~
+$ curl -XDELETE localhost:9200/basketball   
+~~~
+## 키바나 디스커버 (Kibana discover)
