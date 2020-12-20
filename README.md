@@ -581,6 +581,7 @@ basketball index 삭제
 ~~~
 $ curl -XDELETE localhost:9200/basketball   
 ~~~
+   
 ## 키바나 디스커버 (Kibana discover)   
 Discover 페이지: 특정 인덱스의 데이터를 확인할 수 있음.   
    
@@ -595,3 +596,13 @@ Discover 페이지: 특정 인덱스의 데이터를 확인할 수 있음.
    
 - 토글 버튼을 눌러 특정 데이터에 대한 정보들만 확인할 수 있음.   
 ![discover4](./img/discover4.png)   
+   
+## 키바나 비주얼라이즈 (Kibana Visualize)   
+   
+- Line Chart   
+![Linechart](./img/visualize1.png)
+   
+- Metric   
+![Metric](./img/visualize2.png)
+   
+- Dashboard
