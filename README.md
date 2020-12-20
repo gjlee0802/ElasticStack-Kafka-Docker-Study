@@ -3,7 +3,7 @@
 yoonje님의 아래 레포지토리에서 'tuto'파일을 https://github.com/gjlee0802/ElasticStackStudy/blob/main/tuto 로 대체하여 수행.   
 yoonje님의 설치 튜토리얼: https://github.com/yoonje/elastic-stack-tutorial   
 **tuto에서 패키지 다운로드 주소 수정, 우분투 환경에 맞게 수정**   
-**주의사항: 사용자명 "user"을 기준으로 함.   
+**주의사항: 사용자명 "user"을 기준으로 함.**   
 
 # ElasticStackStudy1
 
