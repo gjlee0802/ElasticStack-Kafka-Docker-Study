@@ -613,3 +613,25 @@ Discover 페이지: 특정 인덱스의 데이터를 확인할 수 있음.
 ![Metric](./img/visualize2.png)
    
 - Dashboard
+
+
+# 컨테이너 Study
+
+## OCI ( OPEN CONTAINER INITIATIVE )
+최근에는 컴퓨터 전체를 가상화하는 가상머신에 비해 오버헤드가 적은 컨테이너 기술이 주목 받고 있습니다.   
+가상머신과 마찬가지로 컨테이너도 컨테이너 내부에 저장되는 소프트웨어를 담고 있는 파일들을 패키징할 수 있는 포맷이 필요한데,   
+가상머신의 OVF에 해당하는 표준이 OCI (Open Container Initiative) 입니다.   
+
+## 컨테이너와 VMs의 차이 ( 아키텍처 접근 방식 )
+
+### VMs (Hypervisor기반 가상화)
+![VMARCH](./img/VM_arch.png)
+VM은 "hypervisor"를 사용하여 물리적 시스템 위에서 실행됩니다.   
+hypervisor 자체는 "호스트 머신"이라고하는 물리적 컴퓨터에서 실행됩니다.   
+Hypervisor기반 Solution의 주요 장점은 여러분이 전체 범위 OS를 운영을 가능하게 한다는 것입니다.   
+### Container
+![ContainerARCH](./img/container_arch.png)
+**하드웨어 가상화를 제공하는 VM과 달리 컨테이너는 "사용자 공간"을 추상화하여 운영 체제 수준의 가상화를 제공합니다.**   
+"The one big difference between containers and VMs is that containers *share* the host system’s kernel with other containers."   
+**컨테이너와 VM의 큰 차이점은 컨테이너가 호스트 시스템의 커널을 다른 컨테이너와 공유한다는 것입니다.**   
+
