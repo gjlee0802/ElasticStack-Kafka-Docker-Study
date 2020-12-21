@@ -614,6 +614,43 @@ Discover 페이지: 특정 인덱스의 데이터를 확인할 수 있음.
    
 - Dashboard
 
+# 키바나 실습 - 코로나 대시보드
+- 튜토리얼   
+https://github.com/eskrug/elastic-demos/tree/master/covid19   
+- 데이터   
+https://www.kaggle.com/kimjihoo/coronavirusdataset   
+
+- TimeProvince.csv 데이터셋을 파일업로드.   
+- Mappings를 long타입이 불필요한 데이터들을 비교적 크기가 작은 integer로 바꿈.   
+- 가져온 데이터 확인   
+![covid-1](./img/1.png)   
+- EMS(Elastic Map Service)에서 다르게 돼있는 지역명과 매칭이 되게 해줘야 함.   
+Elastic Map Service : https://maps.elastic.co/#file/south_korea_provinces   
+![covid-2](./img/2.png)   
+- south-korea-province 인덱스 생성   
+![covid-3](./img/3.png)   
+- south-korea-province 인덱스에 값 입력.   
+  - covid19-name : TimeProvince.csv 파일의 province 필드 값   
+  - ems-name { en, kr} : Elastic Map Service 의 South Korea Provinces 맵에 매칭되는 값   
+![covid-4](./img/4.png)   
+- 색인시 데이터 확장을 위한 **enrich pipeline 생성 및 확장**   
+![covid-5](./img/5.png)   
+- Enrich Ingest Pipeline 생성   
+![covid-6](./img/6.png)   
+- Enrich 프로세서를 적용해서 인덱스 값 업데이트   
+![covid-7](./img/7.png)   
+![covid-8](./img/8.png)   
+![covid-9](./img/9.png)   
+- Index Pattern 생성   
+![covid-10](./img/10.png)   
+- Discover에서 데이터 확인   
+![covid-11](./img/11.png)
+- Area Chart   
+![covid-12](./img/12.png)   
+- Line Chart   
+![covid-13](./img/13.png)   
+- Dashboard (Maps와 Metric도 추가)   
+![covid-14](./img/14.png)   
 
 # 컨테이너 Study
 
