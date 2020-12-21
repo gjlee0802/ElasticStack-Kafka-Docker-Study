@@ -624,14 +624,24 @@ Discover 페이지: 특정 인덱스의 데이터를 확인할 수 있음.
 
 ## 컨테이너와 VMs의 차이 ( 아키텍처 접근 방식 )
 
-### VMs (Hypervisor기반 가상화)
-![VMARCH](./img/VM_arch.png)
+### VMs (Hypervisor기반 가상화)   
+![VMARCH](./img/VM_arch.png)   
 VM은 "hypervisor"를 사용하여 물리적 시스템 위에서 실행됩니다.   
 hypervisor 자체는 "호스트 머신"이라고하는 물리적 컴퓨터에서 실행됩니다.   
 Hypervisor기반 Solution의 주요 장점은 여러분이 전체 범위 OS를 운영을 가능하게 한다는 것입니다.   
-### Container
-![ContainerARCH](./img/container_arch.png)
+   
+### Container   
+![ContainerARCH](./img/container_arch.png)   
 **하드웨어 가상화를 제공하는 VM과 달리 컨테이너는 "사용자 공간"을 추상화하여 운영 체제 수준의 가상화를 제공합니다.**   
 "The one big difference between containers and VMs is that containers *share* the host system’s kernel with other containers."   
 **컨테이너와 VM의 큰 차이점은 컨테이너가 호스트 시스템의 커널을 다른 컨테이너와 공유한다는 것입니다.**   
+   
+VMs의 경우 컨테이너를 사용하는 것만큼 경량화할 수는 없습니다.   
+리소스와 기능이 제한되어 있을 때는 집중적으로 배포할 수 있는 경량화된 애플리케이션이 필요합니다.   
+Linux 컨테이너는 운영 체제에서 기본으로 실행되고 모든 컨테이너 전체에서 운영 체제를 공유하므로 애플리케이션과 서비스를 가볍게 유지할 수 있으며 빠른 속도로 동시에 실행할 수 있습니다.   
 
+## LXC(Linux 컨테이너) 프로젝트
+툴, 템플릿, 라이브러리, 언어 바인딩 세트를 제공하는 오픈소스 컨테이너 플랫폼입니다.   
+LXC에는 컨테이너를 시작할 때 사용자 환경을 개선하는 단순한 커맨드라인 인터페이스가 있습니다.   
+LXC는 대부분의 Linux 기반 시스템에 설치할 수 있는 운영 체제 수준의 가상화 환경을 제공합니다.   
+사용 중인 Linux 배포에서 패키지 리포지토리를 통해 제공할 수도 있습니다.   
