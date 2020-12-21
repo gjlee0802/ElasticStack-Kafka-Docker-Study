@@ -632,6 +632,7 @@ Elastic Map Service : https://maps.elastic.co/#file/south_korea_provinces
 - south-korea-province 인덱스에 값 입력.   
   - covid19-name : TimeProvince.csv 파일의 province 필드 값   
   - ems-name { en, kr} : Elastic Map Service 의 South Korea Provinces 맵에 매칭되는 값   
+
 ![covid-4](./img/4.png)   
 - 색인시 데이터 확장을 위한 **enrich pipeline 생성 및 확장**   
 ![covid-5](./img/5.png)   
