@@ -843,7 +843,7 @@ $ docker images | grep ubuntu
 ubuntu | git | f98472c1d8aa | 6 seconds ago | 252.2 MB
 ..
 ~~~
-### Dockerfile
+### Dockerfile을 이용한 이미지 생성 실습   
 - Dockerfile이란?   
 이미지 생성 과정을 기술한 Docker전용 DSL   
 - Dockerfile 생성   
@@ -866,3 +866,22 @@ $ docker build -t ubuntu:git2 ./
 ~~~
 $ docker run --rm -it ubuntu:git2 bash
 ~~~
+
+### Dockerfile 명령어   
+- FROM <이미지이름>   
+베이스 이미지 지정   
+- ADD <추가할 파일> <추가될 경로>   
+파일 추가
+~~~
+ADD data.txt /temp/data.txt
+~~~
+- RUN <명령어>   
+명령어 실행   
+- WORKDIR <경로>   
+작업 디렉터리 변경(cd <경로>와 비슷한 느낌)   
+- ENV <환경변수> <값>   
+환경변수 기본값 지정
+- EXPOSE <포트>   
+컨테이너로 실행 시 노출시킬 포트   
+- CMD <명령어>   
+이미지의 기본 실행 명령어 지정   
