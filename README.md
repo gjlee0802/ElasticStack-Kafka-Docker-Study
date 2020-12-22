@@ -683,3 +683,19 @@ Linux 컨테이너는 운영 체제에서 기본으로 실행되고 모든 컨�
 LXC에는 컨테이너를 시작할 때 사용자 환경을 개선하는 단순한 커맨드라인 인터페이스가 있습니다.   
 LXC는 대부분의 Linux 기반 시스템에 설치할 수 있는 운영 체제 수준의 가상화 환경을 제공합니다.   
 사용 중인 Linux 배포에서 패키지 리포지토리를 통해 제공할 수도 있습니다.   
+
+# 도커 실습
+우분투 환경
+~~~
+$ docker run -it ubuntu:latest bash
+~~~
+Busybox(매우 작은 이미지)
+~~~
+$ docker run -it busybox:latest sh
+~~~
+Mysql
+~~~
+$ docker run -p 3306:3306 --name mysql -d mysql
+~~~
+
+
