@@ -779,3 +779,38 @@ exec 명령어는 run 명령어와 달리 실행중인 도커 컨테이너에 �
 $ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 $ sudo chmod +x /usr/local/bin/docker-compose
 ~~~
+- docker-compose.yml 생성(db와 wordpress서비스를 하나의 파일로 묶음)   
+"volumes: " -> 볼륨 마운트를 하여 컨테이너가 사라지더라도 데이터가 유실되지 않도록 함.
+~~~
+version: '2'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - ./mysql:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: wordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+   wordpress:
+     image: wordpress:latest
+     volumes:
+       - ./wp:/var/www/html
+     ports:
+       - "8000:80"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_PASSWORD: wordpress
+~~~
+- docker compose를 이용하여 위 파일로 작성한 것과 같이 mysql, wordpress 실행   
+~~~
+$ docker-compose up -d
+~~~
+- docker compose로 컨테이너를 종료하고 삭제
+~~~
+$ docker-compose down
+~~~
