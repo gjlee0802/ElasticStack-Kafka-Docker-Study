@@ -720,6 +720,10 @@ $ docker rm [OPTIONS] CONTAINER [CONTAINER...]
 ~~~
 $ docker rm $(docker ps -qa)
 ~~~
+- 이미지 제거
+~~~
+docker rmi <저장소 이름>/<이미지 이름, ID>:<태그>
+~~~
 - 컨테이너 로그 확인 (-f : 실시간으로 로그 확인)
 ~~~
 $ docker logs
@@ -891,7 +895,7 @@ ADD data.txt /temp/data.txt
 도커허브 주소   
 https://hub.docker.com/   
    
-- tag명령어로 이미지에 태그   
+- tag명령어로 이미지에 태그(저장소 이름 : gjlee0802)   
 ~~~
 $ docker tag mydockerimage:latest gjlee0802/mydockerimage:latest
 ~~~
