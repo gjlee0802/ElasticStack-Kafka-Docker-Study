@@ -719,9 +719,41 @@ $ docker rm [OPTIONS] CONTAINER [CONTAINER...]
 ~~~
 $ docker rm $(docker ps -qa)
 ~~~
+- 컨테이너 로그 확인 (-f : 실시간으로 로그 확인)
+~~~
+$ docker logs
+~~~
 - Busybox(매우 작은 이미지)   
 ~~~
 $ docker run ---rm it busybox:latest sh
+~~~
+- 도커 컨테이너끼리 통신을 할 수 있는 가상 네트워크를 생성   
+~~~
+$ docker network create [OPTIONS] NETWORK
+~~~
+- **example >** app-network라는 이름으로 wordpress와 mysql이 통신할 네트워크 생성
+~~~
+$ docker network create app-network
+~~~
+- 기존에 생성된 컨테이너에 네트워크를 추가   
+~~~
+$ docker network connect [OPTIONS] NETWORK CONTAINER
+~~~
+- **example >** 만들어 놓은 mysql 에 네트워크를 추가   
+~~~
+$ docker network connect app-network mysql
+~~~
+- **example >** 워드프레스를 app‐network 에 속하게 생성하고 IP 가 아닌 mysql 컨테이너 ip로 바로 접근   
+같은 네트워크에 속해 있으면 상대 컨테이너의 이름을 DNS 로 조회하여 바로 접근 할 수 있습니다.   
+하나의 컨테이너는 여러개의 network 에 속할 수 있으며 Docker Swarm 같은 클러스터에서 편리하게 사용할 수 있습니다.   
+~~~
+docker run -d -p 8080:80 \
+ --network=app-network \
+ -e WORDPRESS_DB_HOST=mysql \
+ -e WORDPRESS_DB_NAME=wp \
+ -e WORDPRESS_DB_USER=wp \
+ -e WORDPRESS_DB_PASSWORD=wp \
+ wordpress
 ~~~
 - Mysql 도커로 실행   
 ~~~
@@ -742,7 +774,8 @@ quit
 exec 명령어는 run 명령어와 달리 실행중인 도커 컨테이너에 접속할 때 사용하며   
 일반적으로 컨테이너 안에 ssh server 등을 설치하지 않고 exec 명령어로 접속합니다.   
 
-- Tensorflow   
+- docker-compose 설치   
 ~~~
-$ docker run -it -p 8888:8888 tensorflow/tensorflow
+$ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
 ~~~
