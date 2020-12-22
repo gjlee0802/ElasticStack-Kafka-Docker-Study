@@ -685,6 +685,7 @@ LXC는 대부분의 Linux 기반 시스템에 설치할 수 있는 운영 체제
 사용 중인 Linux 배포에서 패키지 리포지토리를 통해 제공할 수도 있습니다.   
 
 # 도커 실습
+## 기본적인 명령어   
 - 우분투 최신버전 이미지 다운   
 ~~~
 $ docker pull ubuntu:latest
@@ -747,7 +748,7 @@ $ docker network connect app-network mysql
 같은 네트워크에 속해 있으면 상대 컨테이너의 이름을 DNS 로 조회하여 바로 접근 할 수 있습니다.   
 하나의 컨테이너는 여러개의 network 에 속할 수 있으며 Docker Swarm 같은 클러스터에서 편리하게 사용할 수 있습니다.   
 ~~~
-docker run -d -p 8080:80 \
+$ docker run -d -p 8080:80 \
  --network=app-network \
  -e WORDPRESS_DB_HOST=mysql \
  -e WORDPRESS_DB_NAME=wp \
@@ -813,4 +814,55 @@ $ docker-compose up -d
 - docker compose로 컨테이너를 종료하고 삭제
 ~~~
 $ docker-compose down
+~~~
+## 이미지 생성
+- 커스텀 이미지를 만들기까지 상태 변화   
+![docker_custom_image](./img/docker_custom.png)   
+
+### 실습 : git을 추가적으로 설치한 환경을 이미지로 만들기(컨테이너 환경을 저장)   
+- 컨테이너를 실행시키고 git을 설치
+~~~
+$ docker run -it ubuntu:latest --name git /bin/bash
+# apt update
+# apt install git
+~~~
+- 컨테이너 차이점 비교(변경사항 확인 가능)   
+~~~
+$ docker diff CONTAINER_ID
+~~~
+- ubuntu:git 이름으로 이미지 생성   
+~~~
+$ docker commit git ubuntu:git
+~~~
+- 이미지 생성됐는지 확인   
+~~~
+$ docker images | grep ubuntu
+~~~
+결과:   
+~~~
+ubuntu | git | f98472c1d8aa | 6 seconds ago | 252.2 MB
+..
+~~~
+### Dockerfile
+- Dockerfile이란?   
+이미지 생성 과정을 기술한 Docker전용 DSL   
+- Dockerfile 생성   
+~~~
+$ vim Dockerfile
+~~~
+다음과 같이 작성   
+~~~
+# 어떤 이미지를 사용하여 도커 이미지를 사용할지 결정   
+FROM ubuntu:16.04   
+# RUN은 실행할 명령어를 의미
+RUN apt update
+RUN apt install -y
+~~~
+- 현재 경로에 있는 도커파일을 이용하여 ubuntu:git 이름으로 이미지 생성   
+~~~
+$ docker build -t ubuntu:git2 ./
+~~~
+- Dockerfile로 생성한 이미지 실행해보기   
+~~~
+$ docker run --rm -it ubuntu:git2 bash
 ~~~
