@@ -685,17 +685,64 @@ LXC는 대부분의 Linux 기반 시스템에 설치할 수 있는 운영 체제
 사용 중인 Linux 배포에서 패키지 리포지토리를 통해 제공할 수도 있습니다.   
 
 # 도커 실습
-우분투 환경
+- 우분투 최신버전 이미지 다운   
 ~~~
-$ docker run -it ubuntu:latest bash
+$ docker pull ubuntu:latest
 ~~~
-Busybox(매우 작은 이미지)
+- 간단하게 도커 이미지 목록을 확인   
 ~~~
-$ docker run -it busybox:latest sh
+$ docker images
 ~~~
-Mysql
+- 도커 이미지를 삭제   
 ~~~
-$ docker run -p 3306:3306 --name mysql -d mysql
+$ docker rmi [OPTIONS] IMAGE [IMAGE...]
 ~~~
+- 실행중인 컨테이너 목록을 확인 (-a : 중지된 컨테이너도 확인)   
+~~~
+$ docker ps
+~~~
+- 우분투 이미지 도커 실행   
+키보드 입력을 위해 -it(== ‐i ‐t)옵션을 줍니다.   
+--rm옵션이 없다면 컨테이너가 종료되더라도 삭제되지 않고 남아있습니다.   
+~~~
+$ docker run --rm -it ubuntu:latest bash
+~~~
+- 실행중인 컨테이너를 중지   
+~~~
+$ docker stop [OPTIONS] CONTAINER [CONTAINER...]
+~~~
+- 종료된 컨테이너를 완전히 제거   
+~~~
+$ docker rm [OPTIONS] CONTAINER [CONTAINER...]
+~~~
+- 모든 컨테이너를 제거
+~~~
+$ docker rm $(docker ps -qa)
+~~~
+- Busybox(매우 작은 이미지)   
+~~~
+$ docker run ---rm it busybox:latest sh
+~~~
+- Mysql 도커로 실행   
+~~~
+$ docker run -d -p 3306:3306 \
+-e MYSQL_ALLOW_EMPTY_PASSWORD=true \
+--name mysql \
+mysql:5.7
+~~~
+- Mysql에 접속하여 database 만들기
+~~~
+$ docker exec -it mysql mysql
+create database wp CHARACTER SET utf8;
+grant all privileges on wp.* to wp@'%' identified by 'wp';
+flush privileges;
+quit
+~~~
+- **exec 명령어와 run 명령어의 차이**   
+exec 명령어는 run 명령어와 달리 실행중인 도커 컨테이너에 접속할 때 사용하며   
+일반적으로 컨테이너 안에 ssh server 등을 설치하지 않고 exec 명령어로 접속합니다.   
 
-
+- Tensorflow   
+~~~
+$ docker run -it -p 8888:8888 tensorflow/tensorflow
+~~~
