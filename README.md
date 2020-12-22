@@ -1,3 +1,21 @@
+# 목차 정리
+[ElasticStack 우분투 환경에서 설치](#elasticstack-우분투-환경에서-설치)   
+[ELK구성요소](#elk구성요소)   
+## 엘라스틱서치   
+[Elasticsearch 용어정리](#elasticsearch-용어-정리)   
+[Elasticsearch 특징](#elasticsearch-특징)   
+[Elasticsearch 데이터 색인](#elasticsearch-data-색인)   
+[Elasticsearch 실행환경 설정](#elasticsearch-실행-환경-설정방법-2가지)   
+...   
+## 키바나   
+[키바나 기본](#키바나-기본-실습)   
+[키바나 코로나 대시보드 만들기](키바나-실습---코로나-대시보드)   
+## 컨테이너   
+[컨테이너와 VMs의 차이](#컨테이너와-vms의-차이---아키텍처-접근-방식)   
+[도커 실습-기본 명령어](#기본적인-명령어)   
+[도커 실습-이미지 생성](#이미지-생성)   
+[도커허브 이용](도커허브(도커-레지스트리)-push-pull)
+
 # ElasticStack 우분투 환경에서 설치   
 
 yoonje님의 아래 레포지토리에서 'tuto'파일을 https://github.com/gjlee0802/ElasticStackStudy/blob/main/tuto 로 대체하여 수행.   
@@ -7,7 +25,7 @@ yoonje님의 설치 튜토리얼: https://github.com/yoonje/elastic-stack-tutori
 
 # ElasticStackStudy1
 
-## ELK구성요소(Elasticsearch, Logstash, Kibana)
+## ELK구성요소(Elasticsearch,Logstash,Kibana)
 
 ### Elasticsearch (데이터베이스)
 Logstash로부터 받은 데이터를 검색 및 집계를 하여 필요한 관심 있는 정보를 획득.   
@@ -570,7 +588,7 @@ snowball 애널라이저를 사용한 결과는 앞의 whitespace 토크나이�
 - jumps, jumping을 검색하면 실제로는 jump로 바꾸어 검색이 됩니다.
 
 
-# 키바나 실습
+# 키바나 기본 실습
 ## 키바나 매니지먼트 (Kibana management)   
 basketball 인덱스 추가   
 ~~~
@@ -655,12 +673,12 @@ Elastic Map Service : https://maps.elastic.co/#file/south_korea_provinces
 
 # 컨테이너 Study
 
-## OCI ( OPEN CONTAINER INITIATIVE )
+## OCI (OPEN CONTAINER INITIATIVE)
 최근에는 컴퓨터 전체를 가상화하는 가상머신에 비해 오버헤드가 적은 컨테이너 기술이 주목 받고 있습니다.   
 가상머신과 마찬가지로 컨테이너도 컨테이너 내부에 저장되는 소프트웨어를 담고 있는 파일들을 패키징할 수 있는 포맷이 필요한데,   
 가상머신의 OVF에 해당하는 표준이 OCI (Open Container Initiative) 입니다.   
 
-## 컨테이너와 VMs의 차이 ( 아키텍처 접근 방식 )
+## 컨테이너와 VMs의 차이 - 아키텍처 접근 방식
 
 ### VMs (Hypervisor기반 가상화)   
 ![VMARCH](./img/VM_arch.png)   
@@ -891,7 +909,7 @@ ADD data.txt /temp/data.txt
 이미지의 기본 실행 명령어 지정   
 <명령어>가 비어있을 때는 bash를 기본으로 지정   
 
-### 도커허브(도커 레지스트리) push pull   
+## 도커허브(도커 레지스트리) push pull   
 도커허브 주소   
 https://hub.docker.com/   
    
