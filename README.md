@@ -886,3 +886,27 @@ ADD data.txt /temp/data.txt
 - CMD <명령어>   
 이미지의 기본 실행 명령어 지정   
 <명령어>가 비어있을 때는 bash를 기본으로 지정   
+
+### 도커허브(도커 레지스트리) push pull   
+도커허브 주소   
+https://hub.docker.com/   
+   
+- tag명령어로 이미지에 태그   
+~~~
+$ docker tag mydockerimage:latest gjlee0802/mydockerimage:latest
+~~~
+- Dockerhub에 로그인   
+~~~
+$ docker login --username=gjlee0802 --email=userid@gmail.com
+Password:
+WARNING: login credentials saved in /Users/devsun/.docker/config.json
+Login Succeeded
+~~~
+- 도커허브에 이미지 push   
+~~~
+$ docker push gjlee0802/mydockerimage
+~~~
+- 도커허브로부터 이미지 pull   
+~~~
+$ docker pull gjlee0802/mydockerimage
+~~~
