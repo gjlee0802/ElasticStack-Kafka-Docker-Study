@@ -962,3 +962,24 @@ $ docker push gjlee0802/mydockerimage
 ~~~
 $ docker pull gjlee0802/mydockerimage
 ~~~
+
+# Kafka   
+## Producer와 Consumer
+![kafka_features](./img/kafka1.png)   
+각종 데이터를 담는 topic이라는 개념이 있는데, 쉽게 생각해서 **큐(queue)** 라고 생각하면 됩니다.   
+큐에 데이터를 넣는 역할은 Producer가 하고, 큐에서 데이터를 가져오는 역할은 Consumer가 합니다.   
+Producer와 Consumer은 라이브러리로 돼있어서 어플리케이션에서 구현이 가능합니다.   
+오가는 데이터 포맷은 거의 제한이 없습니다.(json, tsv, avro etc... 여러 포맷을 지원)   
+
+## Kafka Topic   
+Topic은 파일시스템 폴더와 유사한 구조를 가집니다.   
+Topic의 이름은 목적에 따라 어떤 데이터를 담는지 명확하게 명시하여 편리하게 관리할 수 있습니다.   
+   
+### 파티션
+하나의 토픽은 여러개의 파티션으로 구성될 수 있으며 첫번째 파티션 번호는 0입니다.
+하나의 파티션은 큐와 같이 데이터가 끝에서부터 차곡차곡 쌓이게 됩니다.    
+Kafka Consumer은 끝에서부터(가장오래된 순으로) 데이터를 가져오게 됩니다.   
+Consumer가 데이터를 가져간다고해서 데이터가 사라지는 것이 아니라 파티션에 그대로 남습니다.(또 다른 Consumer가 연결되어 가져갈 수 있도록 함.)   
+![kafka_features](./img/kafka2.png)   
+파티션을 늘리는 이유: Consumer 개수를 늘려 데이터 처리를 분산시킬 수 있습니다.   
+파티션의 데이터(record)를 삭제하는 타이밍: 최대 record 보존 시간, 최대 record 보존 크기로 결정   
