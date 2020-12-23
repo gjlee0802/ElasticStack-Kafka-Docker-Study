@@ -22,7 +22,10 @@
 ## Kafka   
 [Producer & Consumer](#producer와-consumer)  
 [Topic](#kafka-topic)   
-[Broker, Replication, ISR](broker,-replication,-isr)   
+[Broker](#broker)
+[Replication](#replication)
+[ISR](#isr---in-sync-replica)
+[Broker, Replication, ISR](#broker,-replication,-isr)   
 ...   
 # ElasticStack 우분투 환경에서 설치   
 
@@ -1012,7 +1015,7 @@ Kafka Brocker은 Kafka가 설치되어 있는 서버 단위를 말합니다.
 replication = ***Leader partition(원본 파티션)*** + ***Follower partition(복제 파티션)***   
 replication의 개수는 제한됩니다.(replication 개수 <= Kafka broker 개수)   
 
-### ISR(In Sync Replica)   
+### ISR - In Sync Replica   
 각각의 replication group이 바로 ISR입니다.   
 ![ISR1](./img/kafka3.PNG)   
 - leader가 down 되면서 follower가 new leader가 되는 과정   
