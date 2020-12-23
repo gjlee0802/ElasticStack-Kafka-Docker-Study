@@ -19,6 +19,11 @@
 [도커 실습-이미지 생성](#이미지-생성)   
 [도커허브 이용](#도커허브-push-pull)   
 ...   
+## Kafka   
+[Producer & Consumer](#producer와-consumer)  
+[Topic](#kafka-topic)   
+[Broker, Replication, ISR](broker,-replication,-isr)   
+...   
 # ElasticStack 우분투 환경에서 설치   
 
 yoonje님의 아래 레포지토리에서 'tuto'파일을 https://github.com/gjlee0802/ElasticStackStudy/blob/main/tuto 로 대체하여 수행.   
@@ -965,12 +970,22 @@ $ docker pull gjlee0802/mydockerimage
 
 # Kafka   
 ## Producer와 Consumer
-![kafka_features](./img/kafka1.png)   
+![kafka_features](./img/kafka1.PNG)   
 각종 데이터를 담는 topic이라는 개념이 있는데, 쉽게 생각해서 **큐(queue)** 라고 생각하면 됩니다.   
 큐에 데이터를 넣는 역할은 Producer가 하고, 큐에서 데이터를 가져오는 역할은 Consumer가 합니다.   
 Producer와 Consumer은 라이브러리로 돼있어서 어플리케이션에서 구현이 가능합니다.   
 오가는 데이터 포맷은 거의 제한이 없습니다.(json, tsv, avro etc... 여러 포맷을 지원)   
-
+### Producer 역할   
+- Topic에 해당하는 메시지를 생성   
+- 특정 Topic으로 데이터를 publish   
+- 처리 실패/재시도   
+### Consumer 역할
+- Topic의 partition으로부터 데이터 **polling(가져오기)**   
+- **Partition offset**(파티션에 있는 데이터의 번호) 위치 기록(commit) -> 어느 지점까지 데이터를 읽었는지 확인하여 **고가용성 보장**   
+- Consumer group을 통해 **병렬처리**(파티션 개수에 따라 컨슈머를 여러개 배치) -> 주의점: **Consumer 개수 <= partition개수**   
+참고: https://www.youtube.com/watch?v=rBVCvv9skT4&list=PL3Re5Ri5rZmkY46j6WcJXQYRlDRZSUQ1j&index=5   
+      https://jhleed.tistory.com/179
+   
 ## Kafka Topic   
 Topic은 파일시스템 폴더와 유사한 구조를 가집니다.   
 Topic의 이름은 목적에 따라 어떤 데이터를 담는지 명확하게 명시하여 편리하게 관리할 수 있습니다.   
@@ -980,6 +995,36 @@ Topic의 이름은 목적에 따라 어떤 데이터를 담는지 명확하게 �
 하나의 파티션은 큐와 같이 데이터가 끝에서부터 차곡차곡 쌓이게 됩니다.    
 Kafka Consumer은 끝에서부터(가장오래된 순으로) 데이터를 가져오게 됩니다.   
 Consumer가 데이터를 가져간다고해서 데이터가 사라지는 것이 아니라 파티션에 그대로 남습니다.(또 다른 Consumer가 연결되어 가져갈 수 있도록 함.)   
-![kafka_features](./img/kafka2.png)   
+![kafka_features](./img/kafka2.PNG)   
 파티션을 늘리는 이유: Consumer 개수를 늘려 데이터 처리를 분산시킬 수 있습니다.   
 파티션의 데이터(record)를 삭제하는 타이밍: 최대 record 보존 시간, 최대 record 보존 크기로 결정   
+Kafka는 key를 특정한 해시로 변형시켜 파티션과 1대1 매칭을 시킵니다.   
+파티션에는 동일한 key의 value만 쌓이게 됩니다.   
+key를 사용할 경우, 키와 파티션 매칭이 깨질 수 있기 때문에 파티션 개수에 유의하여 파티션을 생성합니다.   
+
+## Broker, Replication, ISR   
+### Broker   
+Kafka Brocker은 Kafka가 설치되어 있는 서버 단위를 말합니다.   
+보통 3개 이상의 broker 이용을 권장합니다.   
+
+### Replication   
+서버에 장애가 생겼을 때, 복구 할 수 있는 고가용성을 보장합니다.(Elastic Search에서 공부한 replica 개념과 매우 유사)   
+replication = ***Leader partition(원본 파티션)*** + ***Follower partition(복제 파티션)***   
+replication의 개수는 제한됩니다.(replication 개수 <= Kafka broker 개수)   
+
+### ISR(In Sync Replica)   
+각각의 replication group이 바로 ISR입니다.   
+![ISR1](./img/kafka3.PNG)   
+- leader가 down 되면서 follower가 new leader가 되는 과정   
+![ISR2](./img/kafka4.PNG)   
+![ISR3](./img/kafka5.PNG)   
+  - topic01의 경우, 
+    ISR 내 follower는 누구라도 leader가 될 수 있는 조건을 충족하기 때문에 follower -> new leader   
+    이때, 일시적으로 follower가 leader가 되는 과정에서 read/write의 timeout이 발생할 수 있겠지만, retry가 일어나면 new leader와       read/write가 가능하기 때문에 장애 상황은 아닙니다.   
+  - topic02의 경우,
+    down 된 follower는 leader가 될 자격이 없기 때문에 ISR에서 제외가 되면서 ISR에는 leader 하나와 follower 하나만 포함되게 됩니다.   
+     topic01과 달리 topic02의 leader는 변하지 않았기 때문에 아무런 특이사항 없이 read/write가 계속 일어납니다.   
+     
+참고: https://www.popit.kr/kafka-%EC%9A%B4%EC%98%81%EC%9E%90%EA%B0%80-%EB%A7%90%ED%95%98%EB%8A%94-topic-replication/   
+
+
