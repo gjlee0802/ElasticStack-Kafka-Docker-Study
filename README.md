@@ -20,12 +20,11 @@
 [도커허브 이용](#도커허브-push-pull)   
 ...   
 ## Kafka   
-[Producer & Consumer](#producer와-consumer)  
+[Producer & Consumer](#producer와-consumer)   
 [Topic](#kafka-topic)   
-[Broker](#broker)
-[Replication](#replication)
-[ISR](#isr---in-sync-replica)
-[Broker, Replication, ISR](#broker,-replication,-isr)   
+[Broker](#broker)   
+[Replication](#replication)   
+[ISR](#isr---in-sync-replica)   
 ...   
 # ElasticStack 우분투 환경에서 설치   
 
