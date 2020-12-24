@@ -985,8 +985,9 @@ Producer와 Consumer은 라이브러리로 돼있어서 어플리케이션에서
 - Topic의 partition으로부터 데이터 **polling(가져오기)**   
 - **Partition offset**(파티션에 있는 데이터의 번호) 위치 기록(commit) -> 어느 지점까지 데이터를 읽었는지 확인하여 **고가용성 보장**   
 - Consumer group을 통해 **병렬처리**(파티션 개수에 따라 컨슈머를 여러개 배치) -> 주의점: **Consumer 개수 <= partition개수**   
+   
 참고: https://www.youtube.com/watch?v=rBVCvv9skT4&list=PL3Re5Ri5rZmkY46j6WcJXQYRlDRZSUQ1j&index=5   
-      https://jhleed.tistory.com/179
+      https://jhleed.tistory.com/179   
    
 ## Kafka Topic   
 Topic은 파일시스템 폴더와 유사한 구조를 가집니다.   
