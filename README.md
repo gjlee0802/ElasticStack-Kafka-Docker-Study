@@ -25,6 +25,7 @@
 [Broker](#broker)   
 [Replication](#replication)   
 [ISR](#isr---in-sync-replica)   
+[Zookeeper](#zookeeper)
 ...   
 # ElasticStack 우분투 환경에서 설치   
 
@@ -1030,4 +1031,16 @@ replication의 개수는 제한됩니다.(replication 개수 <= Kafka broker 개
      
 참고: https://www.popit.kr/kafka-%EC%9A%B4%EC%98%81%EC%9E%90%EA%B0%80-%EB%A7%90%ED%95%98%EB%8A%94-topic-replication/   
 
+## Zookeeper
+### 주키퍼 사용용도
+주키퍼는 클러스터에서 구성 서버들끼리 공유되는 데이터를 유지하거나 어떤 연산을 조율하기 위해 주로 사용합니다.   
+주키퍼는 카프카의 노드 관리를 해주고,  토픽의 offset 정보등을 저장하기 위해 필요합니다.   
+클러스터 내의 broker에 대한 분산 처리는 Apache ZooKeeper가 담당합니다.   
 
+- 설정 관리(Configuration management) : 클러스터의 설정 정보를 최신으로 유지하기 위한 조율 시스템으로 사용됩니다.
+
+- 클러스터 관리(Cluster management) : 클러스터의 서버가 추가되거나 제외될 때 그 정보를 클러스터 안 서버들이 공유하는 데 사용됩니다.
+
+- 리더 채택(Leader selection) : 다중 어플리케이션 중에서 어떤 노드를 리더로 선출할 지를 정하는 로직을 만드는 데 사용됩니다. 주로 복제된 여러 노드 중 연산이 이루어지는 하나의 노드를 택하는 데 사용됩니다.
+
+- 락, 동기화 서비스(Locking and synchronization service) : 클러스터에 쓰기 연산이 빈번할 경우 경쟁상태에 들어갈 가능성이 커집니다. 이는 데이터 불일치를 발생시킵니다. 이 때, 클러스터 전체를 대상을 동기화해( 락을 검 ) 경쟁상태에 들어갈 경우를 사전에 방지합니다.
