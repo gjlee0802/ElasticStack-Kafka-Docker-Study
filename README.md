@@ -25,7 +25,9 @@
 [Broker](#broker)   
 [Replication](#replication)   
 [ISR](#isr---in-sync-replica)   
-[Zookeeper](#zookeeper)
+[Lag](#lag)   
+[Burrow](#burrow)   
+[Zookeeper](#zookeeper)   
 ...   
 # ElasticStack 우분투 환경에서 설치   
 
@@ -1031,15 +1033,30 @@ replication의 개수는 제한됩니다.(replication 개수 <= Kafka broker 개
      
 참고: https://www.popit.kr/kafka-%EC%9A%B4%EC%98%81%EC%9E%90%EA%B0%80-%EB%A7%90%ED%95%98%EB%8A%94-topic-replication/   
 
-## Zookeeper
-### 주키퍼란?
+## Lag   
+**Producer가 데이터를 넣어주는 속도가 Consumer가 데이터를 가져가는 속도보다 빠른 경우**에   
+Producer가 데이터를 넣은 오프셋과 Consumer가 데이터를 가져간 오프셋 간에 차이가 발생합니다.   
+이 **두 오프셋 간의 차이**가 Consumer Lag 입니다.   
+파티션이 하나가 아니라 여러개라면 Lag도 여러개가 존재할 수 있습니다.   
+여러개의 Lag중에 **가장 높은 숫자의 Lag**을 **records-lag-max**라고 합니다.   
+![consumer_lag](consumer_lag.PNG)   
+
+## Burrow   
+Consumer Lag을 모니터링하기 위해 사용합니다.   
+### Burrow의 특징   
+- 멀티 카프카 클러스터 지원   
+- Sliding window를 통한 Consumer의 status(ERROR/WARING/OK) 확인   
+- HTTP api 제공(다양한 추가 생태계 구축 가능)   
+
+## Zookeeper   
+### 주키퍼란?   
 주키퍼는(Zookeeper)는 **분산 코디네이션 서비스를 제공**하는 오픈소스 프로젝트입니다.   
 주키퍼는 znode로 이루어진 **분산 데이터 모델을 지원하는 시스템**이라고 해도 과언이 아닙니다.   
 이 데이터 모델은 **리눅스(linux) 파일시스템과 유사한 시스템을 제공**하고 이것이 주키퍼의 핵심입니다.   
 주키퍼에 채택된 아키텍처와 기법들은 이 데이터 모델을 안정적으로 제공하고자 하기 위함입니다.   
 이 시스템을 통해 주키퍼는 글로벌락, 클러스터 정보, Leader 선출 등을 구현해야하는 곳에 활용할 수 있습니다.   
    
-### 주키퍼 사용용도
+### 주키퍼 사용용도   
 주키퍼는 클러스터에서 구성 서버들끼리 공유되는 데이터를 유지하거나 어떤 연산을 조율하기 위해 주로 사용합니다.   
 주키퍼는 카프카의 노드 관리를 해주고,  토픽의 offset 정보등을 저장하기 위해 필요합니다.   
 클러스터 내의 broker에 대한 분산 처리는 Apache ZooKeeper가 담당합니다.   
