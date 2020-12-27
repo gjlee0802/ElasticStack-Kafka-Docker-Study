@@ -1039,7 +1039,7 @@ Producer가 데이터를 넣은 오프셋과 Consumer가 데이터를 가져간 
 이 **두 오프셋 간의 차이**가 Consumer Lag 입니다.   
 파티션이 하나가 아니라 여러개라면 Lag도 여러개가 존재할 수 있습니다.   
 여러개의 Lag중에 **가장 높은 숫자의 Lag**을 **records-lag-max**라고 합니다.   
-![consumer_lag](consumer_lag.PNG)   
+![consumer_lag](img/consumer_lag.PNG)   
 
 ## Burrow   
 Consumer Lag을 모니터링하기 위해 사용합니다.   
